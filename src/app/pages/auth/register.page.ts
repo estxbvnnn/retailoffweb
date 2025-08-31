@@ -1,176 +1,143 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import {
   IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonLabel, IonInput,
-  IonButton, IonList, IonText, IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonIcon
+  IonButton, IonList, IonText, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonImg, ToastController
 } from '@ionic/angular/standalone';
-import { FormsModule } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+
+function cleanRut(rut: string) { return rut.replace(/\./g, '').replace(/-/g, '').toUpperCase(); }
+function validarRut(rut: string): boolean {
+  const r = cleanRut(rut);
+  if (!/^\d{7,8}[0-9K]$/.test(r)) return false;
+  const cuerpo = r.slice(0, -1), dv = r.slice(-1);
+  let suma = 0, mult = 2;
+  for (let i = cuerpo.length - 1; i >= 0; i--) { suma += parseInt(cuerpo[i], 10) * mult; mult = mult === 7 ? 2 : mult + 1; }
+  const res = 11 - (suma % 11); const dvCalc = res === 11 ? '0' : res === 10 ? 'K' : String(res);
+  return dv === dvCalc;
+}
+function validarPass(pass: string) { return /^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{6,16}$/.test(pass); }
 
 @Component({
   standalone: true,
   selector: 'app-register',
-  imports: [CommonModule, FormsModule, RouterLink,
-    IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonLabel, IonInput, IonButton, IonList, IonText,
-    IonCard, IonCardHeader, IonCardTitle, IonCardSubtitle, IonCardContent, IonIcon],
+  imports: [
+    CommonModule, FormsModule, RouterLink,
+    IonContent, IonHeader, IonTitle, IonToolbar, IonItem, IonLabel, IonInput,
+    IonButton, IonList, IonText, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonImg
+  ],
+  styles: [`
+    .card { max-width: 480px; margin: 24px auto; }
+    .logo{ width: 110px; display:block; margin: 8px auto; }
+    .auth-bg { min-height: 100%; background: linear-gradient(180deg,#0a0a0a,#111); }
+    .dark-card { background:#161616; border:1px solid #272727; color:#fff; }
+    ion-item[color="dark"] { --background:#0f0f0f; --color:#fff; --border-color:#2a2a2a; }
+    ion-label { color: var(--ion-color-light-contrast); }
+  `],
   template: `
-    <ion-header><ion-toolbar><ion-title>Registro</ion-title></ion-toolbar></ion-header>
-    <ion-content class="ion-padding">
-      <ion-card>
-        <ion-card-header>
-          <ion-card-title color="danger">Crear cuenta</ion-card-title>
-          <ion-card-subtitle>Completa tus datos</ion-card-subtitle>
-        </ion-card-header>
-        <ion-card-content>
-          <form (ngSubmit)="register()">
-            <ion-list>
-              <ion-item>
-                <ion-label position="stacked">RUT Chileno</ion-label>
-                <ion-input type="text" [(ngModel)]="rut" name="rut" required maxlength="12" (ionBlur)="rut = formatRut(rut)"></ion-input>
-              </ion-item>
-              <ion-text color="danger" *ngIf="rut && !validateRut(rut)" style="font-size:13px;">RUT inválido. Ej: 20.349.349-3</ion-text>
-              <ion-item>
-                <ion-label position="stacked">Nombre</ion-label>
-                <ion-input type="text" [(ngModel)]="nombre" name="nombre" required maxlength="30"></ion-input>
-              </ion-item>
-              <ion-item>
-                <ion-label position="stacked">Apellido</ion-label>
-                <ion-input type="text" [(ngModel)]="apellido" name="apellido" required maxlength="30"></ion-input>
-              </ion-item>
-              <ion-item>
-                <ion-label position="stacked">Teléfono (+56)</ion-label>
-                <ion-input type="tel" [(ngModel)]="telefono" name="telefono" required maxlength="12"></ion-input>
-              </ion-item>
-              <ion-text color="danger" *ngIf="telefono && !validateTelefono(telefono)" style="font-size:13px;">Teléfono inválido. Ej: +56912345678</ion-text>
-              <ion-item>
-                <ion-label position="stacked">Correo</ion-label>
-                <ion-input type="email" [(ngModel)]="email" name="email" required maxlength="50"></ion-input>
-              </ion-item>
-              <ion-text color="danger" *ngIf="email && !validateEmail(email)" style="font-size:13px;">Correo inválido.</ion-text>
-              <ion-item>
-                <ion-label position="stacked">Contraseña</ion-label>
-                <ion-input type="password" [(ngModel)]="password" name="password" required minlength="8" maxlength="16"></ion-input>
-              </ion-item>
-              <ion-text color="danger" *ngIf="password && !validatePassword(password)" style="font-size:13px;">
-                Contraseña inválida. Mínimo 8, máximo 16 caracteres, una mayúscula, un número y un carácter especial.
-              </ion-text>
-            </ion-list>
-            <div class="ion-padding-top">
-              <ion-button expand="block" type="submit" [disabled]="!canSubmit()">
-                <ion-icon name="person-add-outline" slot="start"></ion-icon>
-                Registrarse
-              </ion-button>
-              <ion-button expand="block" fill="clear" type="button" (click)="goToLogin()">
-                <ion-icon name="log-in-outline" slot="start"></ion-icon>
-                Ya tengo cuenta
-              </ion-button>
-            </div>
-            <div *ngIf="error" class="ion-padding-top" style="color: var(--ion-color-danger);">
-              {{ error }}
-            </div>
-          </form>
-        </ion-card-content>
-      </ion-card>
-    </ion-content>
+  <ion-header>
+    <ion-toolbar color="dark">
+      <ion-title>Registro</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content class="ion-padding auth-bg">
+    <ion-card class="card dark-card">
+      <ion-card-header>
+        <ion-img class="logo" src="/assets/img/logo.png" alt="RetailOff"></ion-img>
+        <ion-card-title>Crear cuenta</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <form #f="ngForm" (ngSubmit)="register(f)" novalidate>
+          <ion-list>
+            <ion-item fill="outline" color="dark">
+              <ion-label position="stacked">RUT</ion-label>
+              <ion-input [(ngModel)]="rut" name="rut" required></ion-input>
+            </ion-item>
+            <ion-text color="danger" *ngIf="rut && !isRutValid()">RUT inválido</ion-text>
+
+            <ion-item fill="outline" color="dark">
+              <ion-label position="stacked">Nombre</ion-label>
+              <ion-input [(ngModel)]="nombre" name="nombre" required></ion-input>
+            </ion-item>
+
+            <ion-item fill="outline" color="dark">
+              <ion-label position="stacked">Apellido</ion-label>
+              <ion-input [(ngModel)]="apellido" name="apellido" required></ion-input>
+            </ion-item>
+
+            <ion-item fill="outline" color="dark">
+              <ion-label position="stacked">Correo</ion-label>
+              <ion-input type="email" [(ngModel)]="email" name="email" required></ion-input>
+            </ion-item>
+
+            <ion-item fill="outline" color="dark">
+              <ion-label position="stacked">Teléfono</ion-label>
+              <ion-input type="tel" [(ngModel)]="telefono" name="telefono" required></ion-input>
+            </ion-item>
+
+            <ion-item fill="outline" color="dark">
+              <ion-label position="stacked">Contraseña</ion-label>
+              <ion-input type="password" [(ngModel)]="password" name="password" required></ion-input>
+            </ion-item>
+            <ion-text color="medium">
+              Mínimo 6 y máximo 16, al menos 1 mayúscula y 1 carácter especial.
+            </ion-text>
+            <ion-text color="danger" *ngIf="password && !isPassValid()">Contraseña no cumple requisitos</ion-text>
+          </ion-list>
+
+          <ion-button
+            expand="block"
+            color="danger"
+            class="ion-margin-top"
+            type="submit"
+            [disabled]="submitting || !f.valid || !isRutValid() || !isPassValid()">
+            {{ submitting ? 'Procesando...' : 'Registrar' }}
+          </ion-button>
+          <ion-button expand="block" fill="clear" [routerLink]="['/login']">Ir a Login</ion-button>
+        </form>
+      </ion-card-content>
+    </ion-card>
+  </ion-content>
   `
 })
 export class RegisterPage {
   private auth = inject(AuthService);
   private router = inject(Router);
+  private toast = inject(ToastController);
 
-  rut = '';
-  nombre = '';
-  apellido = '';
-  telefono = '';
-  email = '';
-  password = '';
-  error: string | null = null;
+  rut = ''; nombre = ''; apellido = ''; email = ''; telefono = ''; password = '';
+  submitting = false;
 
-  canSubmit(): boolean {
-    return (
-      this.validateRut(this.rut) &&
-      this.nombre.trim().length > 0 &&
-      this.apellido.trim().length > 0 &&
-      this.validateTelefono(this.telefono) &&
-      this.validateEmail(this.email) &&
-      this.validatePassword(this.password)
-    );
-  }
+  isRutValid() { return validarRut(this.rut); }
+  isPassValid() { return validarPass(this.password); }
 
-  async register() {
-    this.error = null;
-    if (!this.canSubmit()) {
-      this.error = 'Completa todos los campos correctamente.';
-      return;
-    }
+  async register(f: NgForm) {
     try {
-      await this.auth.register(
-        this.email.trim(),
-        this.password.trim(),
-        {
-          rut: this.rut.trim(),
-          nombre: this.nombre.trim(),
-          apellido: this.apellido.trim(),
-          telefono: this.telefono.trim()
-        }
-      );
-      this.router.navigate(['/login'], { queryParams: { msg: 'Registro exitoso, por favor inicie sesión.' }, replaceUrl: true });
-    } catch (e: any) {
-      if (e?.code === 'permission-denied' || e?.message?.includes('permission')) {
-        this.error = 'No tienes permisos para registrar usuarios. Contacta al administrador.';
-      } else {
-        this.error = e?.message || 'No se pudo registrar';
+      if (this.submitting) return;
+      if (!f.valid || !this.isRutValid() || !this.isPassValid()) {
+        (await this.toast.create({ message: 'Corrige los campos marcados', duration: 1500, color: 'danger' })).present();
+        return;
       }
+      this.submitting = true;
+      await this.auth.registerWithProfile(
+        { rut: cleanRut(this.rut), nombre: this.nombre.trim(), apellido: this.apellido.trim(), telefono: this.telefono.trim(), email: this.email.trim() },
+        this.password
+      );
+      (await this.toast.create({ message: 'Registro exitoso', duration: 1200, color: 'success' })).present();
+      this.router.navigateByUrl('/login', { replaceUrl: true });
+    } catch (e: any) {
+      const code = e?.code || '';
+      let msg = 'Error al registrar';
+      if (code.includes('profile-write-failed')) msg = 'No se pudo guardar tu perfil. Intenta nuevamente.';
+      else if (code.includes('email-already-in-use')) msg = 'El correo ya está registrado';
+      else if (code.includes('weak-password')) msg = 'La contraseña no cumple los requisitos';
+      else if (code.includes('invalid-email')) msg = 'Correo inválido';
+      (await this.toast.create({ message: msg, duration: 1600, color: 'danger' })).present();
+    } finally {
+      this.submitting = false;
     }
-  }
-
-  goToLogin() {
-    this.router.navigateByUrl('/login');
-  }
-
-  // Validaciones
-  formatRut(rut: string): string {
-    rut = rut.replace(/\./g, '').replace(/-/g, '').toUpperCase();
-    if (!rut) return '';
-    let body = rut.slice(0, -1);
-    let dv = rut.slice(-1);
-    let formatted = '';
-    let i = 0;
-    for (let j = body.length - 1; j >= 0; j--) {
-      formatted = body[j] + formatted;
-      i++;
-      if (i % 3 === 0 && j !== 0) formatted = '.' + formatted;
-    }
-    return formatted + '-' + dv;
-  }
-
-  validateRut(rut: string): boolean {
-    rut = rut.replace(/\./g, '').replace(/-/g, '').toUpperCase();
-    if (!/^\d{7,8}[0-9K]$/.test(rut)) return false;
-    let body = rut.slice(0, -1);
-    let dv = rut.slice(-1);
-    let sum = 0, mul = 2;
-    for (let i = body.length - 1; i >= 0; i--) {
-      sum += parseInt(body[i]) * mul;
-      mul = mul === 7 ? 2 : mul + 1;
-    }
-    let expected = 11 - (sum % 11);
-    let dvCalc = expected === 11 ? '0' : expected === 10 ? 'K' : expected.toString();
-    return dv === dvCalc;
-  }
-
-  validateTelefono(tel: string): boolean {
-    tel = tel.replace(/\s/g, '');
-    return /^(\+?56)?0?9[9876543]\d{7}$/.test(tel);
-  }
-
-  validateEmail(email: string): boolean {
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
-  }
-
-  validatePassword(pass: string): boolean {
-    // 8-16 caracteres, al menos una mayúscula, un número y un carácter especial
-    return /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]).{8,16}$/.test(pass);
   }
 }

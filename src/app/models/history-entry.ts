@@ -5,9 +5,5 @@ export interface HistoryEntry {
   type: HistoryType;
   content: string;
   createdAt: number;
-  meta?: {
-    lat?: number;
-    lng?: number;
-    title?: string;
-  };
+  meta?: { lat?: number; lng?: number; title?: string };
 }

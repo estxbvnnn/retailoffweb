@@ -1,11 +1,11 @@
 {
-  "name": "RetailOff",
+  "name": "retailoffweb",
   "version": "0.0.1",
   "author": "Ionic Framework",
   "homepage": "https://ionicframework.com/",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "npx ionic serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",

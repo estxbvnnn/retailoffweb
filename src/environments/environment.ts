@@ -7,13 +7,14 @@ export const environment = {
   firebase: {
     apiKey: "AIzaSyBvNOrZ344Of3PA8OaK4q9YPjYyfoyt-D0",
     authDomain: "retailoffweb.firebaseapp.com",
+    databaseURL: "https://retailoffweb-default-rtdb.firebaseio.com",
     projectId: "retailoffweb",
-    storageBucket: "retailoffweb.firebasestorage.app",
+    storageBucket: "retailoffweb.appspot.com", // corregido
     messagingSenderId: "923723068281",
     appId: "1:923723068281:web:9bf3b3e75452c5477475a8",
     measurementId: "G-B7SP9EZ5L5"
   },
-  mapboxToken: 'pk.eyJ1IjoiZXN0eGJ2biIsImEiOiJjbWV5b3oweWUxbGFyMnJvYXU3cTVlaWxlIn0._Q39NyiwrEprwLJGNVy3WA' // opcional si usas Mapbox más adelante
+  mapboxToken: 'pk.eyJ1IjoiZXN0eGJ2biIsImEiOiJjbWV5b3oweWUxbGFyMnJvYXU3cTVlaWxlIn0._Q39NyiwrEprwLJGNVy3WA' // reemplaza por tu token Mapbox
 };
 
 /*

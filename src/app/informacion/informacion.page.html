@@ -1,44 +1,44 @@
 <ion-header>
-  <ion-toolbar color="default">
+  <ion-toolbar color="dark">
     <ion-title class="titulo" style="text-align: center;" color="danger">Retail Off</ion-title>
   </ion-toolbar>
 </ion-header>
+
 <ion-content class="ion-padding">
-  <ion-card class="ion-text-center" style="max-width: 420px; margin: 0 auto; border-radius: 18px; box-shadow: 0 2px 16px rgba(0,0,0,0.10);">
-    <img alt="Logo Retail Off" src="assets/img/logo.png" style="max-width:120px; margin:24px auto 16px auto; display:block; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,0.08);" />
-    <ion-card-header>
-      <ion-card-title style="font-size: 1.5em;">Bienvenido(a)</ion-card-title>
-      <ion-card-subtitle *ngIf="usuario">
-        <div style="margin-top:8px;">
-          <strong>{{ usuario.nombre }} {{ usuario.apellido }}</strong>
-        </div>
-        <div style="margin-top:4px;">
-          <ion-text color="medium">RUT: {{ usuario.rut }}</ion-text>
-        </div>
-        <div style="margin-top:4px;">
-          <ion-text color="medium">Correo: {{ usuario.email }}</ion-text>
-        </div>
-        <div style="margin-top:4px;">
-          <ion-text color="medium">Teléfono: {{ usuario.telefono }}</ion-text>
-        </div>
-      </ion-card-subtitle>
+  <ion-card>
+    <div style="width:100%;text-align: center;align-content: center;align-self: center;">
+      <img alt="RetailOff" src="/assets/img/logo.png" />
+    </div>
+
+    <!-- Sección informativa -->
+    <ion-card-header class="ion-text-center">
+      <ion-card-title>Bienvenido(a)</ion-card-title>
+      @if(UsuarioListar.length != 0){
+      @for (usuario of UsuarioListar; track $index) {
+      <ion-card-title class="titulo">{{ usuario.u_nombres}}</ion-card-title>
+      <ion-card-title class="titulo">{{ usuario.u_apellidos}}</ion-card-title>
+      @if(usuario.u_rolFK == 1){
+      <ion-card-subtitle>ADMINISTRADOR</ion-card-subtitle>
+      }@else{
+      <ion-card-subtitle>PERSONAL</ion-card-subtitle>
+      }
+      }
+      }
     </ion-card-header>
-    <ion-card-content>
-      <ion-button expand="block" color="primary" (click)="goMision()">
-        <ion-icon name="star-outline" slot="start"></ion-icon>
-        Misión
-      </ion-button>
-      <ion-button expand="block" color="medium" (click)="goPerfil()">
-        <ion-icon name="person-outline" slot="start"></ion-icon>
-        Perfil
-      </ion-button>
-      <ion-button expand="block" color="danger" (click)="logout()">
-        <ion-icon name="power-outline" slot="start"></ion-icon>
-        Logout
-      </ion-button>
+
+    <ion-card-content class="ion-text-justify">
+      <p>
+        Retail Off es una plataforma pensada para facilitar tus compras del hogar, con una experiencia simple y rápida:
+        descubre categorías, tendencias y novedades, revisa opiniones y compra desde tu dispositivo.
+      </p>
+      <div class="ion-text-center ion-margin-top">
+        <ion-button color="danger" routerLink="/mision">Ver Misión</ion-button>
+        <ion-button fill="outline" color="dark" routerLink="/perfil">Ir a Perfil</ion-button>
+      </div>
     </ion-card-content>
   </ion-card>
 </ion-content>
+
 <ion-footer>
   <ion-toolbar>
     <ion-grid>
