@@ -1,0 +1,65 @@
+<ion-header>
+  <ion-toolbar color="default">
+    <ion-title class="titulo" style="text-align: center;" color="danger">Retail Off</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <ion-card class="ion-text-center" style="max-width: 420px; margin: 0 auto; border-radius: 18px; box-shadow: 0 2px 16px rgba(0,0,0,0.10);">
+    <img alt="Logo Retail Off" src="assets/img/logo.png" style="max-width:120px; margin:24px auto 16px auto; display:block; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,0.08);" />
+    <ion-card-header>
+      <ion-card-title style="font-size: 1.5em; color: var(--ion-color-danger);">
+        <ion-icon name="star-outline" slot="start"></ion-icon>
+        MISIÓN
+      </ion-card-title>
+      <ion-card-subtitle style="margin-top:8px; color: var(--ion-color-medium);">
+        Nuestra razón de ser
+      </ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <div style="text-align: justify; font-size: 1.08em; margin-top:12px;">
+        La misión de <strong>Retail Off</strong> es reinventar la forma en que las personas compran artículos para el hogar desde su sofá, ofreciendo una experiencia más fácil y cómoda. Los usuarios pueden navegar por diferentes categorías, ver tendencias y novedades, leer reseñas de otros compradores y realizar pedidos directamente desde sus teléfonos.
+      </div>
+      <div style="margin-top:24px;">
+        <ion-icon name="checkmark-circle-outline" style="color: var(--ion-color-success); font-size: 2em;"></ion-icon>
+        <div style="margin-top:8px; color: var(--ion-color-success); font-weight: 500;">
+          ¡Tu comodidad es nuestra prioridad!
+        </div>
+      </div>
+      <div style="margin-top:32px;">
+        <ion-button expand="block" color="medium" routerLink="/informacion">
+          <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+          Volver al Menu
+        </ion-button>
+        <ion-button expand="block" color="primary" [routerLink]="['/perfil', usuarioID]">
+          <ion-icon name="person-outline" slot="start"></ion-icon>
+          Ir a mi Perfil
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row style="text-align: center; ">
+        @if(UsuarioListar.length != 0){
+        @for (usuariomenu of UsuarioListar; track $index) {
+        @if(usuariomenu.u_rolFK == 1){
+        <ion-col><a routerLink="/informacion/{{ usuarioID}}" (click)="Refrescar()"><ion-icon name="home-outline"
+              slot="icon-only"></ion-icon></a></ion-col>
+        <ion-col><a routerLink="/usuario/{{ usuarioID }}" (click)="Refrescar()"><ion-icon name="people-outline"
+              slot="icon-only"></ion-icon></a></ion-col>
+        }@else {
+        <ion-col><a routerLink="/mision/{{usuarioID}}"><ion-icon name="star-outline"></ion-icon></a></ion-col>
+        <ion-col><a routerLink="/vision/{{usuarioID}}"><ion-icon name="star"></ion-icon></a></ion-col>
+        }
+        }
+        }
+        <ion-col><a routerLink="/perfil/{{ usuarioID }}"><ion-icon name="settings-outline"
+              slot="icon-only"></ion-icon></a></ion-col>
+        <ion-col><a style="color: red;" routerLink="/home"><ion-icon name="power-outline"
+              slot="icon-only"></ion-icon></a></ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

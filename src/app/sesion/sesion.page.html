@@ -1,0 +1,31 @@
+<ion-content class="ion-padding">
+  <div class="vertical-center">
+    <a routerLink="/home"><img alt="Silhouette of mountains" src="assets/img/logo.png"  /></a>
+  </div>
+  <ion-card-header>
+    <div class="vertical-center">
+      <ion-card-title color="danger">Retail Off</ion-card-title>
+    </div>
+    <div class="vertical-center">
+      <ion-card-subtitle>Bienvenidos</ion-card-subtitle>
+    </div>
+  </ion-card-header>
+
+  <ion-card-content>
+
+    <ion-list>
+      <ion-item>
+        <ion-input type="text" placeholder="Ingrese su RUT" [(ngModel)]="usuarioobjeto.u_rut" name="u_rut"
+          required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input type="password" placeholder="Ingrese Contraseña" [(ngModel)]="usuarioobjeto.u_password"
+          name="u_password" required></ion-input>
+      </ion-item>
+    </ion-list>
+
+    <ion-button color="danger" (click)="IniciarSesion()" expand="block">
+      <ion-icon name="home-outline" slot="icon-only"></ion-icon>&nbsp;&nbsp;Iniciar Sesión
+    </ion-button>
+
+  </ion-card-content>

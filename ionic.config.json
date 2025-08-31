@@ -1,0 +1,7 @@
+{
+  "name": "RetailOff",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

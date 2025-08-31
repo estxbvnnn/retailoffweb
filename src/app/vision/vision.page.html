@@ -1,0 +1,50 @@
+<ion-header>
+  <ion-toolbar color="default">
+    <ion-title class="titulo" style="text-align: center;" color="danger">Retail Off </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <ion-card>
+    <div style="width:100%;text-align: center;align-content: center;align-self: center;">
+      <img alt="Silhouette of mountains" src="assets/img/logo.png" />
+    </div>
+    <ion-card-header class="ion-text-center">
+      <ion-card-title color="DANGER">VISÍON</ion-card-title>
+
+      <ion-card-title class="titulo" style="text-align: justify;">La visión de Retail OFF es simple:
+        ofrecer precios “sorprendentemente bajos” para hacer sentir a los consumidores que pueden comprar todo lo que
+        quieran, como se supone lo haría un multimillonario.
+        <br>
+        Esta plataforma de e-commerce se caracteriza por vender todo tipo de productos, desde artículos para el hogar,
+        ropa y calzado hasta audífonos inalámbricos, relojes inteligentes y todo tipo de gadgets, pero a un precio por
+        irrisorio y con envíos totalmente gratuitos, al grado que muchos usuarios dudan en foros especializados y redes
+        sociales sobre la veracidad de las ofertas y promociones.
+      </ion-card-title>
+    </ion-card-header>
+  </ion-card>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row style="text-align: center; ">
+        @if(UsuarioListar.length != 0){
+        @for (usuariomenu of UsuarioListar; track $index) {
+        @if(usuariomenu.u_rolFK == 1){
+        <ion-col><a routerLink="/informacion/{{ usuarioID}}" (click)="Refrescar()"><ion-icon name="home-outline"
+              slot="icon-only"></ion-icon></a></ion-col>
+        <ion-col><a routerLink="/usuario/{{ usuarioID }}" (click)="Refrescar()"><ion-icon name="people-outline"
+              slot="icon-only"></ion-icon></a></ion-col>
+        }@else {
+        <ion-col><a routerLink="/mision/{{usuarioID}}"><ion-icon name="star-outline"></ion-icon></a></ion-col>
+        <ion-col><a routerLink="/vision/{{usuarioID}}"><ion-icon name="star"></ion-icon></a></ion-col>
+        }
+        }
+        }
+        <ion-col><a routerLink="/perfil/{{ usuarioID }}"><ion-icon name="settings-outline"
+              slot="icon-only"></ion-icon></a></ion-col>
+        <ion-col><a style="color: red;" routerLink="/home"><ion-icon name="power-outline"
+              slot="icon-only"></ion-icon></a></ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

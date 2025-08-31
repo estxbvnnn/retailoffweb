@@ -1,0 +1,51 @@
+<ion-header [translucent]="false">
+  <ion-toolbar color="default">
+    <ion-title class="titulo" style="text-align: center;" color="danger">Retail Off </ion-title>
+  </ion-toolbar>
+  <ion-toolbar>
+    <ion-searchbar placeholder="Apellido" animated (ionChange)="BuscarDatos($event)"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+
+  <ion-list>
+    @if(UsuarioListar.length != 0){
+    @for (dato of UsuarioListar; track $index) {
+    <ion-item-sliding>
+      <ion-item>
+        <ion-label>
+          <h3 class="title">{{dato.u_nombres+' '+dato.u_apellidos}}</h3>
+          <div *ngIf="dato.u_rolFK == 1; else usuario">
+            <p class="subtext" style="color:red;"> <strong>ADMINISTRADOR</strong> </p>
+          </div>
+          <ng-template #usuario>
+            <p class="subtext" style="color:red;"> <strong>CLIENTE</strong> </p>
+          </ng-template>
+        </ion-label>
+      </ion-item>
+
+    </ion-item-sliding>
+    }
+    }@else {
+
+    }
+
+  </ion-list>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-grid>
+      <ion-row style="text-align: center; ">
+        <ion-col><a routerLink="/informacion/{{ usuarioID }}" (click)="Refrescar()"><ion-icon name="home-outline"
+              slot="icon-only"></ion-icon></a></ion-col>
+        <ion-col><a routerLink="/usuario/{{ usuarioID }}" (click)="Refrescar()"><ion-icon name="people-outline"
+              slot="icon-only"></ion-icon></a></ion-col>
+        <ion-col><a routerLink="/perfil/{{usuarioID}}"><ion-icon name="settings-outline"
+              slot="icon-only"></ion-icon></a></ion-col>
+        <ion-col><a style="color: red;" routerLink="/home"><ion-icon name="power-outline"
+              slot="icon-only"></ion-icon></a></ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-toolbar>
+</ion-footer>

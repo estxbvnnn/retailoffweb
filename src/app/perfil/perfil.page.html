@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar color="default">
+    <ion-title style="text-align: center;" color="danger">Mi Perfil</ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content class="ion-padding">
+  <ion-card class="ion-text-center" style="max-width: 420px; margin: 0 auto;">
+    <ion-card-header>
+      <ion-card-title>Datos de usuario</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <form *ngIf="usuario">
+        <ion-list>
+          <ion-item>
+            <ion-label position="stacked">Nombre</ion-label>
+            <ion-input [(ngModel)]="nombre" name="nombre" [readonly]="!editMode"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Apellido</ion-label>
+            <ion-input [(ngModel)]="apellido" name="apellido" [readonly]="!editMode"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Teléfono</ion-label>
+            <ion-input [(ngModel)]="telefono" name="telefono" [readonly]="!editMode"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-label position="stacked">Correo</ion-label>
+            <ion-input [(ngModel)]="email" name="email" [readonly]="!editMode"></ion-input>
+          </ion-item>
+        </ion-list>
+        <div class="ion-padding-top">
+          <ion-button expand="block" color="primary" *ngIf="!editMode" (click)="enableEdit()">
+            Editar
+          </ion-button>
+          <ion-button expand="block" color="success" *ngIf="editMode" (click)="save()">
+            Guardar cambios
+          </ion-button>
+          <ion-button expand="block" color="medium" routerLink="/informacion">
+            <ion-icon name="arrow-back-outline" slot="start"></ion-icon>
+            Volver al Menu
+          </ion-button>
+        </div>
+        <div *ngIf="error" style="color: var(--ion-color-danger); margin-top:12px;">
+          {{ error }}
+        </div>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

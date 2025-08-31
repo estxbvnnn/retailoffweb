@@ -1,0 +1,58 @@
+<ion-header [translucent]="false">
+  <ion-toolbar color="default">
+    <ion-title class="titulo" style="text-align: center;" color="danger"><a routerLink="/home" style="text-decoration:none; color:red;">Retail Off</a></ion-title>
+  </ion-toolbar>
+
+  <ion-toolbar class="ion-text-center">
+    <ion-label>
+      <ion-title>Registrarme</ion-title>
+      <h5>Ingrese todos los datos</h5>
+    </ion-label>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <form novalidate>
+      <ion-list>
+        <ion-item>
+          <ion-label position="floating">RUT:</ion-label>
+          <ion-input color="success" type="text" placeholder="RUT" [(ngModel)]="usuarioobjeto.u_rut" name="u_rut" required></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Nombres:</ion-label>
+          <ion-input color="success" placeholder="Nombres Completos" type="text" [(ngModel)]="usuarioobjeto.u_nombres"
+          name="u_nombres"  required></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Apellidos:</ion-label>
+          <ion-input color="success" placeholder="Apellidos Completos" type="text" name="u_apellidos"  [(ngModel)]="usuarioobjeto.u_apellidos"
+            required></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Celular</ion-label>
+          <ion-input color="success" placeholder="Celular" type="number" name="u_celular"  ngModel [(ngModel)]="usuarioobjeto.u_celular"
+            required></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Correo Electrónico</ion-label>
+          <ion-input color="success" placeholder="Correo" type="email" name="u_correo"  ngModel [(ngModel)]="usuarioobjeto.u_correo"
+            required></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-label position="floating">Contrase&ntilde;a:</ion-label>
+          <ion-input color="success" placeholder="Contraseña" type="password" name="u_password"  [(ngModel)]="usuarioobjeto.u_password"
+            required></ion-input>
+        </ion-item>
+      </ion-list>
+      <br>
+      <div style="text-align: center;">
+        <ion-button (click)="Registrar()" color="danger">
+          <ion-icon slot="icon-only" name="save-outline"></ion-icon>
+        </ion-button>
+      </div>
+
+    </form>
+  </ion-card>
+
+</ion-content>
